@@ -1,15 +1,65 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "mychart.fullname" . }}
+  annotations:
+    field.cattle.io/targetWorkloadIds: '["deployment:default:coba-nginx"]'
+    workload.cattle.io/targetWorkloadIdNoop: "true"
+    workload.cattle.io/workloadPortBased: "true"
+  creationTimestamp: null
   labels:
-    {{- include "mychart.labels" . | nindent 4 }}
+    cattle.io/creator: norman
+  name: coba-nginx
+  ownerReferences:
+  - apiVersion: apps/v1beta2
+    controller: true
+    kind: deployment
+    name: coba-nginx
+    uid: d6b8886a-4bfb-468c-a2f1-74b78f9134d2
+  selfLink: /api/v1/namespaces/default/services/coba-nginx
 spec:
-  type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+  - name: http-coba-nginx
+    port: 80
+    protocol: TCP
+    targetPort: 80
   selector:
-    {{- include "mychart.selectorLabels" . | nindent 4 }}
+    workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    field.cattle.io/publicEndpoints: '[{"port":30454,"protocol":"TCP","serviceName":"default:coba-nginx-nodeport","allNodes":true}]'
+    field.cattle.io/targetWorkloadIds: '["deployment:default:coba-nginx"]'
+    workload.cattle.io/targetWorkloadIdNoop: "true"
+    workload.cattle.io/workloadPortBased: "true"
+  creationTimestamp: null
+  labels:
+    cattle.io/creator: norman
+  name: coba-nginx-nodeport
+  ownerReferences:
+  - apiVersion: apps/v1beta2
+    controller: true
+    kind: deployment
+    name: coba-nginx
+    uid: d6b8886a-4bfb-468c-a2f1-74b78f9134d2
+  selfLink: /api/v1/namespaces/default/services/coba-nginx-nodeport
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}

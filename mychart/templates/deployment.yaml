@@ -1,55 +1,60 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mychart.fullname" . }}
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    field.cattle.io/creatorId: user-vmf6r
+    field.cattle.io/publicEndpoints: '[{"port":30454,"protocol":"TCP","serviceName":"default:coba-nginx-nodeport","allNodes":true}]'
+  creationTimestamp: null
+  generation: 1
   labels:
-    {{- include "mychart.labels" . | nindent 4 }}
+    cattle.io/creator: norman
+    workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
+  name: coba-nginx
+  selfLink: /apis/apps/v1/namespaces/default/deployments/coba-nginx
 spec:
-  replicas: {{ .Values.replicaCount }}
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      {{- include "mychart.selectorLabels" . | nindent 6 }}
+      workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
   template:
     metadata:
+      annotations:
+        cattle.io/timestamp: "2020-03-05T16:26:00Z"
+        field.cattle.io/ports: '[[{"containerPort":80,"dnsName":"coba-nginx-nodeport","hostPort":0,"kind":"NodePort","name":"http","protocol":"TCP","sourcePort":0}]]'
+      creationTimestamp: null
       labels:
-        {{- include "mychart.selectorLabels" . | nindent 8 }}
+        workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
     spec:
-    {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-      serviceAccountName: {{ include "mychart.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      - image: mailsyarief/coba_nginx:dev
+        imagePullPolicy: Always
+        name: coba-nginx
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: {}
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}

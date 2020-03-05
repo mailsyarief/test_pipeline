@@ -5,8 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: mailsyarief/coba_nginx
-  tags: dev
+  repository: nginx
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []

@@ -2,28 +2,28 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    field.cattle.io/targetWorkloadIds: '["deployment:default:coba-nginx"]'
+    field.cattle.io/targetWorkloadIds: '["deployment:default:oke-nginx"]'
     workload.cattle.io/targetWorkloadIdNoop: "true"
     workload.cattle.io/workloadPortBased: "true"
   creationTimestamp: null
   labels:
     cattle.io/creator: norman
-  name: coba-nginx
+  name: oke-nginx
   ownerReferences:
   - apiVersion: apps/v1beta2
     controller: true
     kind: deployment
-    name: coba-nginx
+    name: oke-nginx
     uid: d6b8886a-4bfb-468c-a2f1-74b78f9134d2
-  selfLink: /api/v1/namespaces/default/services/coba-nginx
+  selfLink: /api/v1/namespaces/default/services/oke-nginx
 spec:
   ports:
-  - name: http-coba-nginx
+  - name: http-oke-nginx
     port: 80
     protocol: TCP
     targetPort: 80
   selector:
-    workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
+    workload.user.cattle.io/workloadselector: deployment-default-oke-nginx
   sessionAffinity: None
   type: ClusterIP
 status:
@@ -35,21 +35,21 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    field.cattle.io/publicEndpoints: '[{"port":30454,"protocol":"TCP","serviceName":"default:coba-nginx-nodeport","allNodes":true}]'
-    field.cattle.io/targetWorkloadIds: '["deployment:default:coba-nginx"]'
+    field.cattle.io/publicEndpoints: '[{"port":30454,"protocol":"TCP","serviceName":"default:oke-nginx-nodeport","allNodes":true}]'
+    field.cattle.io/targetWorkloadIds: '["deployment:default:oke-nginx"]'
     workload.cattle.io/targetWorkloadIdNoop: "true"
     workload.cattle.io/workloadPortBased: "true"
   creationTimestamp: null
   labels:
     cattle.io/creator: norman
-  name: coba-nginx-nodeport
+  name: oke-nginx-nodeport
   ownerReferences:
   - apiVersion: apps/v1beta2
     controller: true
     kind: deployment
-    name: coba-nginx
+    name: oke-nginx
     uid: d6b8886a-4bfb-468c-a2f1-74b78f9134d2
-  selfLink: /api/v1/namespaces/default/services/coba-nginx-nodeport
+  selfLink: /api/v1/namespaces/default/services/oke-nginx-nodeport
 spec:
   externalTrafficPolicy: Cluster
   ports:
@@ -58,7 +58,7 @@ spec:
     protocol: TCP
     targetPort: 80
   selector:
-    workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
+    workload.user.cattle.io/workloadselector: deployment-default-oke-nginx
   sessionAffinity: None
   type: NodePort
 status:

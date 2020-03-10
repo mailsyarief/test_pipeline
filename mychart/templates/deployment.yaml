@@ -4,21 +4,21 @@ metadata:
   annotations:
     deployment.kubernetes.io/revision: "1"
     field.cattle.io/creatorId: user-vmf6r
-    field.cattle.io/publicEndpoints: '[{"port":30454,"protocol":"TCP","serviceName":"default:coba-nginx-nodeport","allNodes":true}]'
+    field.cattle.io/publicEndpoints: '[{"port":30454,"protocol":"TCP","serviceName":"default:oke-nginx-nodeport","allNodes":true}]'
   creationTimestamp: null
   generation: 1
   labels:
     cattle.io/creator: norman
-    workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
-  name: coba-nginx
-  selfLink: /apis/apps/v1/namespaces/default/deployments/coba-nginx
+    workload.user.cattle.io/workloadselector: deployment-default-oke-nginx
+  name: oke-nginx
+  selfLink: /apis/apps/v1/namespaces/default/deployments/oke-nginx
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
+      workload.user.cattle.io/workloadselector: deployment-default-oke-nginx
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -28,15 +28,15 @@ spec:
     metadata:
       annotations:
         cattle.io/timestamp: "2020-03-05T16:26:00Z"
-        field.cattle.io/ports: '[[{"containerPort":80,"dnsName":"coba-nginx-nodeport","hostPort":0,"kind":"NodePort","name":"http","protocol":"TCP","sourcePort":0}]]'
+        field.cattle.io/ports: '[[{"containerPort":80,"dnsName":"oke-nginx-nodeport","hostPort":0,"kind":"NodePort","name":"http","protocol":"TCP","sourcePort":0}]]'
       creationTimestamp: null
       labels:
-        workload.user.cattle.io/workloadselector: deployment-default-coba-nginx
+        workload.user.cattle.io/workloadselector: deployment-default-oke-nginx
     spec:
       containers:
-      - image: mailsyarief/coba_nginx:dev
+      - image: mailsyarief/oke_nginx:1
         imagePullPolicy: Always
-        name: coba-nginx
+        name: oke-nginx
         ports:
         - containerPort: 80
           name: http
